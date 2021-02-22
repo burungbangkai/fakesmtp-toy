@@ -10,3 +10,50 @@ message RawEmailReceivedEvent {
     string inbox_name = 2;
     bytes raw = 3;
 }
+
+message GetUserInboxsReq {
+    string user_id = 1;
+}
+
+message UserInbox {
+    string inbox_name = 1;
+    string inbox_password = 2;
+    string inbox_user_name = 3;
+}
+
+message GetUserInboxsResp {
+    string user_id = 1;
+    repeated UserInbox inboxs = 2;
+}
+
+message DeleteUserInboxReq {
+    string user_id = 1;
+    string inbox_name = 2;
+}
+
+message AddUserInboxReq {
+    string user_id = 1;
+}
+
+message AddUserInboxResp {
+    string user_id = 1;
+    UserInbox inbox = 2;
+}
+
+message UpdateUserInboxReq {
+    string user_id = 1;
+    string inbox_name = 2;
+    string new_inbox_name = 3;
+}
+
+message UpdateUserInboxResp {
+    string user_id = 1;
+    UserInbox inbox = 2;
+}
+
+service SmtpService {
+    rpc DeleteUserInbox(DeleteUserInboxReq) returns(google.protobuf.Empty);
+    rpc AddUserInbox(AddUserInboxReq) returns(AddUserInboxResp);
+    rpc GetUserInboxs(GetUserInboxsReq) returns(GetUserInboxsResp);
+    rpc UpdateUserInbox(UpdateUserInboxReq) returns(UpdateUserInboxResp);
+}
