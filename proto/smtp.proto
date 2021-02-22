@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package stmp;
+option go_package = "pkg/adapter/grpc";
+
+import "google/protobuf/empty.proto";
+
+message RawEmailReceivedEvent {
+    string user_id = 1;
+    string inbox_name = 2;
+    bytes raw = 3;
+}
