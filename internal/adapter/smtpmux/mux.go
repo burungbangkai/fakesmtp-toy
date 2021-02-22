@@ -1,4 +1,4 @@
-package smtpserver
+package smtpmux
 
 import (
 	"context"
