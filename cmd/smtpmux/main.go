@@ -5,6 +5,7 @@ import (
 	"runtime"
 	"sync"
 
+	"github.com/burungbangkai/fakesmtp/internal/adapter/config"
 	"github.com/burungbangkai/fakesmtp/internal/adapter/smtpmux"
 	"github.com/burungbangkai/fakesmtp/internal/model"
 	"github.com/burungbangkai/fakesmtp/internal/port"
@@ -18,6 +19,7 @@ func main() {
 		hostname string
 		wg       *sync.WaitGroup
 	)
+	cfgLoadr = config.EnvConfigLoader
 	if err := cfgLoadr(&cfg); err != nil {
 		panic(err)
 	}
