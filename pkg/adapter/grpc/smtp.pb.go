@@ -4,9 +4,13 @@
 package grpc
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/empty"
+	empty "github.com/golang/protobuf/ptypes/empty"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -76,23 +80,612 @@ func (m *RawEmailReceivedEvent) GetRaw() []byte {
 	return nil
 }
 
+type GetUserInboxsReq struct {
+	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserInboxsReq) Reset()         { *m = GetUserInboxsReq{} }
+func (m *GetUserInboxsReq) String() string { return proto.CompactTextString(m) }
+func (*GetUserInboxsReq) ProtoMessage()    {}
+func (*GetUserInboxsReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{1}
+}
+
+func (m *GetUserInboxsReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserInboxsReq.Unmarshal(m, b)
+}
+func (m *GetUserInboxsReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserInboxsReq.Marshal(b, m, deterministic)
+}
+func (m *GetUserInboxsReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserInboxsReq.Merge(m, src)
+}
+func (m *GetUserInboxsReq) XXX_Size() int {
+	return xxx_messageInfo_GetUserInboxsReq.Size(m)
+}
+func (m *GetUserInboxsReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserInboxsReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserInboxsReq proto.InternalMessageInfo
+
+func (m *GetUserInboxsReq) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+type UserInbox struct {
+	InboxName            string   `protobuf:"bytes,1,opt,name=inbox_name,json=inboxName,proto3" json:"inbox_name,omitempty"`
+	InboxPassword        string   `protobuf:"bytes,2,opt,name=inbox_password,json=inboxPassword,proto3" json:"inbox_password,omitempty"`
+	InboxUserName        string   `protobuf:"bytes,3,opt,name=inbox_user_name,json=inboxUserName,proto3" json:"inbox_user_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UserInbox) Reset()         { *m = UserInbox{} }
+func (m *UserInbox) String() string { return proto.CompactTextString(m) }
+func (*UserInbox) ProtoMessage()    {}
+func (*UserInbox) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{2}
+}
+
+func (m *UserInbox) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserInbox.Unmarshal(m, b)
+}
+func (m *UserInbox) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserInbox.Marshal(b, m, deterministic)
+}
+func (m *UserInbox) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserInbox.Merge(m, src)
+}
+func (m *UserInbox) XXX_Size() int {
+	return xxx_messageInfo_UserInbox.Size(m)
+}
+func (m *UserInbox) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserInbox.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UserInbox proto.InternalMessageInfo
+
+func (m *UserInbox) GetInboxName() string {
+	if m != nil {
+		return m.InboxName
+	}
+	return ""
+}
+
+func (m *UserInbox) GetInboxPassword() string {
+	if m != nil {
+		return m.InboxPassword
+	}
+	return ""
+}
+
+func (m *UserInbox) GetInboxUserName() string {
+	if m != nil {
+		return m.InboxUserName
+	}
+	return ""
+}
+
+type GetUserInboxsResp struct {
+	UserId               string       `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Inboxs               []*UserInbox `protobuf:"bytes,2,rep,name=inboxs,proto3" json:"inboxs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *GetUserInboxsResp) Reset()         { *m = GetUserInboxsResp{} }
+func (m *GetUserInboxsResp) String() string { return proto.CompactTextString(m) }
+func (*GetUserInboxsResp) ProtoMessage()    {}
+func (*GetUserInboxsResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{3}
+}
+
+func (m *GetUserInboxsResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserInboxsResp.Unmarshal(m, b)
+}
+func (m *GetUserInboxsResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserInboxsResp.Marshal(b, m, deterministic)
+}
+func (m *GetUserInboxsResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserInboxsResp.Merge(m, src)
+}
+func (m *GetUserInboxsResp) XXX_Size() int {
+	return xxx_messageInfo_GetUserInboxsResp.Size(m)
+}
+func (m *GetUserInboxsResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserInboxsResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserInboxsResp proto.InternalMessageInfo
+
+func (m *GetUserInboxsResp) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *GetUserInboxsResp) GetInboxs() []*UserInbox {
+	if m != nil {
+		return m.Inboxs
+	}
+	return nil
+}
+
+type DeleteUserInboxReq struct {
+	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	InboxName            string   `protobuf:"bytes,2,opt,name=inbox_name,json=inboxName,proto3" json:"inbox_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteUserInboxReq) Reset()         { *m = DeleteUserInboxReq{} }
+func (m *DeleteUserInboxReq) String() string { return proto.CompactTextString(m) }
+func (*DeleteUserInboxReq) ProtoMessage()    {}
+func (*DeleteUserInboxReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{4}
+}
+
+func (m *DeleteUserInboxReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteUserInboxReq.Unmarshal(m, b)
+}
+func (m *DeleteUserInboxReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteUserInboxReq.Marshal(b, m, deterministic)
+}
+func (m *DeleteUserInboxReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteUserInboxReq.Merge(m, src)
+}
+func (m *DeleteUserInboxReq) XXX_Size() int {
+	return xxx_messageInfo_DeleteUserInboxReq.Size(m)
+}
+func (m *DeleteUserInboxReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteUserInboxReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteUserInboxReq proto.InternalMessageInfo
+
+func (m *DeleteUserInboxReq) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *DeleteUserInboxReq) GetInboxName() string {
+	if m != nil {
+		return m.InboxName
+	}
+	return ""
+}
+
+type AddUserInboxReq struct {
+	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AddUserInboxReq) Reset()         { *m = AddUserInboxReq{} }
+func (m *AddUserInboxReq) String() string { return proto.CompactTextString(m) }
+func (*AddUserInboxReq) ProtoMessage()    {}
+func (*AddUserInboxReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{5}
+}
+
+func (m *AddUserInboxReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddUserInboxReq.Unmarshal(m, b)
+}
+func (m *AddUserInboxReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddUserInboxReq.Marshal(b, m, deterministic)
+}
+func (m *AddUserInboxReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddUserInboxReq.Merge(m, src)
+}
+func (m *AddUserInboxReq) XXX_Size() int {
+	return xxx_messageInfo_AddUserInboxReq.Size(m)
+}
+func (m *AddUserInboxReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddUserInboxReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddUserInboxReq proto.InternalMessageInfo
+
+func (m *AddUserInboxReq) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+type AddUserInboxResp struct {
+	UserId               string     `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Inbox                *UserInbox `protobuf:"bytes,2,opt,name=inbox,proto3" json:"inbox,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *AddUserInboxResp) Reset()         { *m = AddUserInboxResp{} }
+func (m *AddUserInboxResp) String() string { return proto.CompactTextString(m) }
+func (*AddUserInboxResp) ProtoMessage()    {}
+func (*AddUserInboxResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{6}
+}
+
+func (m *AddUserInboxResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddUserInboxResp.Unmarshal(m, b)
+}
+func (m *AddUserInboxResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddUserInboxResp.Marshal(b, m, deterministic)
+}
+func (m *AddUserInboxResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddUserInboxResp.Merge(m, src)
+}
+func (m *AddUserInboxResp) XXX_Size() int {
+	return xxx_messageInfo_AddUserInboxResp.Size(m)
+}
+func (m *AddUserInboxResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddUserInboxResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddUserInboxResp proto.InternalMessageInfo
+
+func (m *AddUserInboxResp) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *AddUserInboxResp) GetInbox() *UserInbox {
+	if m != nil {
+		return m.Inbox
+	}
+	return nil
+}
+
+type UpdateUserInboxReq struct {
+	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	InboxName            string   `protobuf:"bytes,2,opt,name=inbox_name,json=inboxName,proto3" json:"inbox_name,omitempty"`
+	NewInboxName         string   `protobuf:"bytes,3,opt,name=new_inbox_name,json=newInboxName,proto3" json:"new_inbox_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateUserInboxReq) Reset()         { *m = UpdateUserInboxReq{} }
+func (m *UpdateUserInboxReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateUserInboxReq) ProtoMessage()    {}
+func (*UpdateUserInboxReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{7}
+}
+
+func (m *UpdateUserInboxReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateUserInboxReq.Unmarshal(m, b)
+}
+func (m *UpdateUserInboxReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateUserInboxReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateUserInboxReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateUserInboxReq.Merge(m, src)
+}
+func (m *UpdateUserInboxReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateUserInboxReq.Size(m)
+}
+func (m *UpdateUserInboxReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateUserInboxReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateUserInboxReq proto.InternalMessageInfo
+
+func (m *UpdateUserInboxReq) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *UpdateUserInboxReq) GetInboxName() string {
+	if m != nil {
+		return m.InboxName
+	}
+	return ""
+}
+
+func (m *UpdateUserInboxReq) GetNewInboxName() string {
+	if m != nil {
+		return m.NewInboxName
+	}
+	return ""
+}
+
+type UpdateUserInboxResp struct {
+	UserId               string     `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Inbox                *UserInbox `protobuf:"bytes,2,opt,name=inbox,proto3" json:"inbox,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *UpdateUserInboxResp) Reset()         { *m = UpdateUserInboxResp{} }
+func (m *UpdateUserInboxResp) String() string { return proto.CompactTextString(m) }
+func (*UpdateUserInboxResp) ProtoMessage()    {}
+func (*UpdateUserInboxResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b40e017a3db57e14, []int{8}
+}
+
+func (m *UpdateUserInboxResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateUserInboxResp.Unmarshal(m, b)
+}
+func (m *UpdateUserInboxResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateUserInboxResp.Marshal(b, m, deterministic)
+}
+func (m *UpdateUserInboxResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateUserInboxResp.Merge(m, src)
+}
+func (m *UpdateUserInboxResp) XXX_Size() int {
+	return xxx_messageInfo_UpdateUserInboxResp.Size(m)
+}
+func (m *UpdateUserInboxResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateUserInboxResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateUserInboxResp proto.InternalMessageInfo
+
+func (m *UpdateUserInboxResp) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *UpdateUserInboxResp) GetInbox() *UserInbox {
+	if m != nil {
+		return m.Inbox
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*RawEmailReceivedEvent)(nil), "stmp.RawEmailReceivedEvent")
+	proto.RegisterType((*GetUserInboxsReq)(nil), "stmp.GetUserInboxsReq")
+	proto.RegisterType((*UserInbox)(nil), "stmp.UserInbox")
+	proto.RegisterType((*GetUserInboxsResp)(nil), "stmp.GetUserInboxsResp")
+	proto.RegisterType((*DeleteUserInboxReq)(nil), "stmp.DeleteUserInboxReq")
+	proto.RegisterType((*AddUserInboxReq)(nil), "stmp.AddUserInboxReq")
+	proto.RegisterType((*AddUserInboxResp)(nil), "stmp.AddUserInboxResp")
+	proto.RegisterType((*UpdateUserInboxReq)(nil), "stmp.UpdateUserInboxReq")
+	proto.RegisterType((*UpdateUserInboxResp)(nil), "stmp.UpdateUserInboxResp")
 }
 
 func init() { proto.RegisterFile("smtp.proto", fileDescriptor_b40e017a3db57e14) }
 
 var fileDescriptor_b40e017a3db57e14 = []byte{
-	// 176 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x24, 0x8d, 0xb1, 0x0a, 0xc2, 0x30,
-	0x18, 0x84, 0xa9, 0x95, 0x4a, 0x83, 0x43, 0x09, 0x88, 0x45, 0x11, 0x8a, 0x53, 0x27, 0x33, 0xf8,
-	0x06, 0x42, 0x07, 0x17, 0x87, 0x8c, 0x2e, 0xe5, 0x6f, 0xf3, 0x1b, 0x82, 0x4d, 0x13, 0xd2, 0xb4,
-	0xd5, 0xb7, 0x97, 0xc6, 0xed, 0xee, 0xbb, 0x83, 0x8f, 0x90, 0x41, 0x7b, 0x7b, 0xb1, 0xce, 0x78,
-	0x43, 0xd7, 0x83, 0xd7, 0xf6, 0x70, 0x94, 0xc6, 0xc8, 0x0e, 0x59, 0x60, 0xcd, 0xf8, 0x62, 0xa8,
-	0xad, 0xff, 0xfe, 0x2f, 0x67, 0x20, 0x3b, 0x0e, 0x73, 0xa5, 0x41, 0x75, 0x1c, 0x5b, 0x54, 0x13,
-	0x8a, 0x6a, 0xc2, 0xde, 0xd3, 0x3d, 0xd9, 0x8c, 0x03, 0xba, 0x5a, 0x89, 0x3c, 0x2a, 0xa2, 0x32,
-	0xe5, 0xc9, 0x52, 0xef, 0x82, 0x9e, 0x08, 0x51, 0x7d, 0x63, 0x3e, 0x75, 0x0f, 0x1a, 0xf3, 0x55,
-	0xd8, 0xd2, 0x40, 0x1e, 0xa0, 0x91, 0x66, 0x24, 0x76, 0x30, 0xe7, 0x71, 0x11, 0x95, 0x5b, 0xbe,
-	0xc4, 0x1b, 0x7d, 0x66, 0xf6, 0x2d, 0x19, 0x08, 0xb0, 0x1e, 0x1d, 0x93, 0xce, 0xb6, 0x4d, 0x12,
-	0xec, 0xd7, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x1e, 0x29, 0x11, 0xd0, 0xae, 0x00, 0x00, 0x00,
+	// 439 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0xef, 0x6b, 0x13, 0x41,
+	0x10, 0x25, 0x89, 0x46, 0x32, 0x4d, 0x7b, 0x71, 0xa4, 0xed, 0x79, 0x22, 0x84, 0xc5, 0x6a, 0x50,
+	0xb8, 0x40, 0xfd, 0x2c, 0xf8, 0x2b, 0x4a, 0x41, 0x44, 0xae, 0xe4, 0x8b, 0x5f, 0xc2, 0x26, 0x3b,
+	0x86, 0xc3, 0xdc, 0xdd, 0xba, 0xbb, 0xcd, 0xd9, 0xbf, 0xc5, 0x7f, 0x56, 0x76, 0xf7, 0x1a, 0xd3,
+	0x4b, 0x52, 0x05, 0xfb, 0x2d, 0x99, 0xf7, 0x66, 0xde, 0xbe, 0x37, 0x37, 0x00, 0x3a, 0x33, 0x32,
+	0x96, 0xaa, 0x30, 0x05, 0xde, 0xd1, 0x26, 0x93, 0xd1, 0xa3, 0x79, 0x51, 0xcc, 0x17, 0x34, 0x74,
+	0xb5, 0xe9, 0xc5, 0xb7, 0x21, 0x65, 0xd2, 0x5c, 0x7a, 0x0a, 0xe3, 0x70, 0x98, 0xf0, 0x72, 0x94,
+	0xf1, 0x74, 0x91, 0xd0, 0x8c, 0xd2, 0x25, 0x89, 0xd1, 0x92, 0x72, 0x83, 0xc7, 0x70, 0xef, 0x42,
+	0x93, 0x9a, 0xa4, 0x22, 0x6c, 0xf4, 0x1b, 0x83, 0x4e, 0xd2, 0xb6, 0x7f, 0xcf, 0x04, 0x3e, 0x06,
+	0x48, 0xf3, 0x69, 0xf1, 0x73, 0x92, 0xf3, 0x8c, 0xc2, 0xa6, 0xc3, 0x3a, 0xae, 0xf2, 0x99, 0x67,
+	0x84, 0x3d, 0x68, 0x29, 0x5e, 0x86, 0xad, 0x7e, 0x63, 0xd0, 0x4d, 0xec, 0x4f, 0xf6, 0x02, 0x7a,
+	0x1f, 0xc9, 0x8c, 0x6d, 0xb7, 0x65, 0xe9, 0x84, 0x7e, 0xec, 0x9c, 0xce, 0x2e, 0xa1, 0xb3, 0x62,
+	0xd6, 0xa4, 0x1a, 0x75, 0xa9, 0x13, 0x38, 0xf0, 0xb0, 0xe4, 0x5a, 0x97, 0x85, 0x12, 0xd5, 0x6b,
+	0xf6, 0x5d, 0xf5, 0x4b, 0x55, 0xc4, 0xa7, 0x10, 0x78, 0x9a, 0x53, 0x74, 0xa3, 0x5a, 0x6b, 0x3c,
+	0x2b, 0x67, 0xc7, 0xb1, 0x31, 0xdc, 0xaf, 0xbd, 0x53, 0xcb, 0xdd, 0x31, 0x3c, 0x83, 0xb6, 0x6b,
+	0xd7, 0x61, 0xb3, 0xdf, 0x1a, 0xec, 0x9d, 0x06, 0xb1, 0x0d, 0x3b, 0x5e, 0xb5, 0x27, 0x15, 0xcc,
+	0x3e, 0x01, 0xbe, 0xa7, 0x05, 0x19, 0xfa, 0x03, 0xdd, 0x10, 0xc0, 0x5f, 0xe2, 0x65, 0xcf, 0x21,
+	0x78, 0x23, 0xc4, 0x3f, 0x8d, 0x62, 0x09, 0xf4, 0xae, 0x73, 0x6f, 0xf2, 0x73, 0x02, 0x77, 0x9d,
+	0x8a, 0x93, 0xdc, 0x62, 0xc7, 0xa3, 0x4c, 0x01, 0x8e, 0xa5, 0xe0, 0xb7, 0xe3, 0x06, 0x9f, 0xc0,
+	0x41, 0x4e, 0xe5, 0x64, 0x8d, 0xe2, 0x37, 0xd3, 0xcd, 0xa9, 0x3c, 0x5b, 0x79, 0x1e, 0xc3, 0x83,
+	0x0d, 0xcd, 0xff, 0xb7, 0x72, 0xfa, 0xab, 0x09, 0x7b, 0xe7, 0x99, 0x91, 0xe7, 0xa4, 0x96, 0xe9,
+	0x8c, 0xf0, 0x1d, 0x04, 0xb5, 0x45, 0x61, 0xe8, 0x5b, 0x37, 0xf7, 0x17, 0x1d, 0xc5, 0xfe, 0xaa,
+	0xe2, 0xab, 0xab, 0x8a, 0x47, 0xf6, 0xaa, 0xf0, 0x15, 0x74, 0xd7, 0x33, 0xc7, 0x43, 0x3f, 0xa1,
+	0xb6, 0xb3, 0xe8, 0x68, 0x5b, 0x59, 0x4b, 0x7c, 0x0d, 0xfb, 0xd7, 0xbe, 0x41, 0xac, 0x88, 0xf5,
+	0x03, 0x8a, 0x8e, 0xb7, 0xd6, 0xb5, 0xc4, 0x0f, 0x10, 0xd4, 0xc2, 0xba, 0x72, 0xb1, 0xb9, 0xb7,
+	0xe8, 0xe1, 0x0e, 0x44, 0xcb, 0xb7, 0xf8, 0xb5, 0x27, 0xbf, 0xcf, 0x87, 0x5c, 0x70, 0x69, 0x48,
+	0x0d, 0xe7, 0x4a, 0xce, 0xa6, 0x6d, 0x67, 0xf6, 0xe5, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0x99,
+	0x14, 0x55, 0x79, 0x64, 0x04, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// SmtpServiceClient is the client API for SmtpService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type SmtpServiceClient interface {
+	DeleteUserInbox(ctx context.Context, in *DeleteUserInboxReq, opts ...grpc.CallOption) (*empty.Empty, error)
+	AddUserInbox(ctx context.Context, in *AddUserInboxReq, opts ...grpc.CallOption) (*AddUserInboxResp, error)
+	GetUserInboxs(ctx context.Context, in *GetUserInboxsReq, opts ...grpc.CallOption) (*GetUserInboxsResp, error)
+	UpdateUserInbox(ctx context.Context, in *UpdateUserInboxReq, opts ...grpc.CallOption) (*UpdateUserInboxResp, error)
+}
+
+type smtpServiceClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewSmtpServiceClient(cc *grpc.ClientConn) SmtpServiceClient {
+	return &smtpServiceClient{cc}
+}
+
+func (c *smtpServiceClient) DeleteUserInbox(ctx context.Context, in *DeleteUserInboxReq, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/stmp.SmtpService/DeleteUserInbox", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *smtpServiceClient) AddUserInbox(ctx context.Context, in *AddUserInboxReq, opts ...grpc.CallOption) (*AddUserInboxResp, error) {
+	out := new(AddUserInboxResp)
+	err := c.cc.Invoke(ctx, "/stmp.SmtpService/AddUserInbox", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *smtpServiceClient) GetUserInboxs(ctx context.Context, in *GetUserInboxsReq, opts ...grpc.CallOption) (*GetUserInboxsResp, error) {
+	out := new(GetUserInboxsResp)
+	err := c.cc.Invoke(ctx, "/stmp.SmtpService/GetUserInboxs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *smtpServiceClient) UpdateUserInbox(ctx context.Context, in *UpdateUserInboxReq, opts ...grpc.CallOption) (*UpdateUserInboxResp, error) {
+	out := new(UpdateUserInboxResp)
+	err := c.cc.Invoke(ctx, "/stmp.SmtpService/UpdateUserInbox", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SmtpServiceServer is the server API for SmtpService service.
+type SmtpServiceServer interface {
+	DeleteUserInbox(context.Context, *DeleteUserInboxReq) (*empty.Empty, error)
+	AddUserInbox(context.Context, *AddUserInboxReq) (*AddUserInboxResp, error)
+	GetUserInboxs(context.Context, *GetUserInboxsReq) (*GetUserInboxsResp, error)
+	UpdateUserInbox(context.Context, *UpdateUserInboxReq) (*UpdateUserInboxResp, error)
+}
+
+// UnimplementedSmtpServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedSmtpServiceServer struct {
+}
+
+func (*UnimplementedSmtpServiceServer) DeleteUserInbox(ctx context.Context, req *DeleteUserInboxReq) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserInbox not implemented")
+}
+func (*UnimplementedSmtpServiceServer) AddUserInbox(ctx context.Context, req *AddUserInboxReq) (*AddUserInboxResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUserInbox not implemented")
+}
+func (*UnimplementedSmtpServiceServer) GetUserInboxs(ctx context.Context, req *GetUserInboxsReq) (*GetUserInboxsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInboxs not implemented")
+}
+func (*UnimplementedSmtpServiceServer) UpdateUserInbox(ctx context.Context, req *UpdateUserInboxReq) (*UpdateUserInboxResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInbox not implemented")
+}
+
+func RegisterSmtpServiceServer(s *grpc.Server, srv SmtpServiceServer) {
+	s.RegisterService(&_SmtpService_serviceDesc, srv)
+}
+
+func _SmtpService_DeleteUserInbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserInboxReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmtpServiceServer).DeleteUserInbox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/stmp.SmtpService/DeleteUserInbox",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmtpServiceServer).DeleteUserInbox(ctx, req.(*DeleteUserInboxReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SmtpService_AddUserInbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddUserInboxReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmtpServiceServer).AddUserInbox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/stmp.SmtpService/AddUserInbox",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmtpServiceServer).AddUserInbox(ctx, req.(*AddUserInboxReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SmtpService_GetUserInboxs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserInboxsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmtpServiceServer).GetUserInboxs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/stmp.SmtpService/GetUserInboxs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmtpServiceServer).GetUserInboxs(ctx, req.(*GetUserInboxsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SmtpService_UpdateUserInbox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserInboxReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmtpServiceServer).UpdateUserInbox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/stmp.SmtpService/UpdateUserInbox",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmtpServiceServer).UpdateUserInbox(ctx, req.(*UpdateUserInboxReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _SmtpService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "stmp.SmtpService",
+	HandlerType: (*SmtpServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "DeleteUserInbox",
+			Handler:    _SmtpService_DeleteUserInbox_Handler,
+		},
+		{
+			MethodName: "AddUserInbox",
+			Handler:    _SmtpService_AddUserInbox_Handler,
+		},
+		{
+			MethodName: "GetUserInboxs",
+			Handler:    _SmtpService_GetUserInboxs_Handler,
+		},
+		{
+			MethodName: "UpdateUserInbox",
+			Handler:    _SmtpService_UpdateUserInbox_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "smtp.proto",
 }
