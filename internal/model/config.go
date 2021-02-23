@@ -6,4 +6,5 @@ type Config struct {
 	NatsURI         string
 	NatsClusterID   string
 	NatsMaxInflight int
+	GRPCPort        int
 }

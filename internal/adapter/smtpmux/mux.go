@@ -72,6 +72,7 @@ func New(
 	srv.Domain = hostname
 	srv.AllowInsecureAuth = true
 	return func() {
+			fmt.Println("running at", srv.Addr)
 			_ = srv.ListenAndServe()
 		}, func() {
 			_ = srv.Close()
